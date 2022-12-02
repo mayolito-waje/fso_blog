@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import morgan from 'morgan';
 import blogsRouter from './controllers/blogs.js';
 import * as config from './utils/config.js';
 import * as logger from './utils/logger.js';
@@ -18,7 +19,14 @@ mongoose.connect(config.MONGODB_URI)
 
 app.use(cors());
 app.use(express.json());
-app.use(middleware.requestLogger);
+app.use(morgan((tokens, req, res) => [
+  tokens.method(req, res),
+  tokens.url(req, res),
+  tokens.status(req, res),
+  tokens.res(req, res, 'content-length'), '-',
+  tokens['response-time'](req, res), 'ms',
+  JSON.stringify(req.body),
+].join(' ')));
 
 app.use('/api/blogs', blogsRouter);
 

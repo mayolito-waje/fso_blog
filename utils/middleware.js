@@ -1,18 +1,4 @@
-import morgan from 'morgan';
 import * as logger from './logger.js';
-
-export const requestLogger = (req, res, next) => {
-  morgan((tokens) => [
-    tokens.method(req, res),
-    tokens.url(req, res),
-    tokens.status(req, res),
-    tokens.res(req, res, 'content-length'), '-',
-    tokens['response-time'](req, res), 'ms',
-    req.body,
-  ].join(' '));
-
-  next();
-};
 
 export const resourceNotFound = (req, res) => res.status(404).json(
   {
