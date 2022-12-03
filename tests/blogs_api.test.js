@@ -32,13 +32,39 @@ test('GET /api/blogs - returned blogs should contain specific blog', async () =>
   const contents = await api.get('/api/blogs');
 
   expect(contents.body).toContainEqual({
-    _id: '5a422aa71b54a676234d17f8',
+    id: '5a422aa71b54a676234d17f8',
     title: 'Go To Statement Considered Harmful',
     author: 'Edsger W. Dijkstra',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 5,
-    __v: 0,
   });
+});
+
+test('unique identifiers should be named \'id\'', async () => {
+  const contents = await api.get('/api/blogs');
+  const blogToCheck = contents.body[0];
+
+  expect(blogToCheck.id).toBeDefined();
+});
+
+test('GET /api/blogs/:id - return the blog if id is available', async () => {
+  const blogsAtStart = await helpers.blogsInDb();
+  const blogToView = blogsAtStart[0];
+
+  const resultBlog = await api
+    .get(`/api/blogs/${blogToView.id}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  expect(resultBlog.body).toEqual(blogToView);
+});
+
+test('GET /api/blogs/:id - unavailable id should return 404', async () => {
+  const unknownId = await helpers.unknownId();
+
+  await api
+    .get(`/api/blogs/${unknownId}`)
+    .expect(404);
 });
 
 afterAll(() => {

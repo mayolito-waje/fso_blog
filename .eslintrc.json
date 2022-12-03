@@ -20,6 +20,7 @@
             {
                 "js": "ignorePackages"
             }
-        ]
+        ],
+        "no-underscore-dangle": "off"
     }
 }
