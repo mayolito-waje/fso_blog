@@ -1,5 +1,5 @@
 import { mostLikes } from '../utils/list_helper.js';
-import blogs from './blogs_seed.js';
+import { blogs } from './test_helpers.js';
 
 describe('most likes', () => {
   test('return the blog with most likes', () => {

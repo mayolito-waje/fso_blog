@@ -1,5 +1,5 @@
 import { totalLikes } from '../utils/list_helper.js';
-import blogs from './blogs_seed.js';
+import { blogs } from './test_helpers.js';
 
 describe('total likes', () => {
   test('when list has only one blog, equals the likes of that', () => {

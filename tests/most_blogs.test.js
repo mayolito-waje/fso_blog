@@ -1,5 +1,5 @@
 import { mostBlogs } from '../utils/list_helper.js';
-import blogs from './blogs_seed.js';
+import { blogs } from './test_helpers.js';
 
 describe('most blogs', () => {
   test('return author with largest amount of blogs', () => {
