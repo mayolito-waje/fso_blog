@@ -1,4 +1,6 @@
-const blogs = [
+import Blog from '../models/blog.js';
+
+export const blogs = [
   {
     _id: '5a422a851b54a676234d17f7',
     title: 'React patterns',
@@ -49,4 +51,7 @@ const blogs = [
   },
 ];
 
-export default blogs;
+export const blogsInDb = async () => {
+  const getBlogs = await Blog.find({});
+  return getBlogs.map((blog) => blog.toJSON());
+};
