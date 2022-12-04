@@ -14,7 +14,7 @@ beforeEach(async () => {
   const promises = blogLists.map((blog) => blog.save());
 
   await Promise.all(promises);
-});
+}, 100000);
 
 test('GET /api/blogs - should return json', async () => {
   api
@@ -121,15 +121,16 @@ test('POST request should include title and author keys', async () => {
   expect(checkBlog).toBe(null);
 });
 
-test('delete a blog resource with a available id', async () => {
-  const blogToDelete = helpers.blogs[0];
+test('delete a blog resource with available id', async () => {
+  const blogsAtStart = await helpers.blogsInDb();
+  const blogToDelete = blogsAtStart[0];
   const idToDelete = blogToDelete.id;
 
   await api
     .delete(`/api/blogs/${idToDelete}`)
     .expect(204);
 
-  const blogsAtEnd = helpers.blogsInDb();
+  const blogsAtEnd = await helpers.blogsInDb();
   expect(blogsAtEnd).toHaveLength(helpers.blogs.length - 1);
 
   const titles = blogsAtEnd.map((blog) => blog.title);
