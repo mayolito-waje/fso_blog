@@ -121,6 +121,21 @@ test('POST request should include title and author keys', async () => {
   expect(checkBlog).toBe(null);
 });
 
+test('delete a blog resource with a available id', async () => {
+  const blogToDelete = helpers.blogs[0];
+  const idToDelete = blogToDelete.id;
+
+  await api
+    .delete(`/api/blogs/${idToDelete}`)
+    .expect(204);
+
+  const blogsAtEnd = helpers.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helpers.blogs.length - 1);
+
+  const titles = blogsAtEnd.map((blog) => blog.title);
+  expect(titles).not.toContain(blogToDelete.title);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
