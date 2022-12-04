@@ -137,6 +137,21 @@ test('delete a blog resource with available id', async () => {
   expect(titles).not.toContain(blogToDelete.title);
 });
 
+test('update a blog with available id', async () => {
+  const blogsAtStart = await helpers.blogsInDb();
+  const blogToUpdate = blogsAtStart[0];
+  const idToUpdate = blogToUpdate.id;
+
+  await api
+    .put(`/api/blogs/${idToUpdate}`)
+    .send({ likes: 24 })
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  const updatedBlog = await api.get(`/api/blogs/${idToUpdate}`);
+  expect(updatedBlog.body.likes).toBe(24);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
