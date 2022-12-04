@@ -3,7 +3,6 @@ import supertest from 'supertest';
 import app from '../app.js';
 import * as helpers from './test_helpers.js';
 import Blog from '../models/blog.js';
-import blog from '../models/blog.js';
 
 const api = supertest(app);
 
@@ -67,7 +66,7 @@ test('POST /api/blogs - successfully added a new blog post', async () => {
   const newBlog = {
     title: 'Test Blog',
     author: 'Sample Author',
-    url: 'https://google.com/',
+    url: 'https://test-url.com',
     likes: 7,
   };
 
@@ -81,6 +80,45 @@ test('POST /api/blogs - successfully added a new blog post', async () => {
   expect(blogsAtEnd).toHaveLength(helpers.blogs.length + 1);
   const titles = blogsAtEnd.map((r) => r.title);
   expect(titles).toContain('Test Blog');
+});
+
+test('If the likes keys is missing, it should default to 0', async () => {
+  const testBlog = {
+    title: 'Test Blog',
+    author: 'Test Author',
+    url: 'https://test-url.com',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(testBlog);
+
+  const testBlogAtEnd = await Blog.findOne({
+    title: 'Test Blog',
+    author: 'Test Author',
+    url: 'https://test-url.com',
+  });
+
+  expect(testBlogAtEnd.likes).toBe(0);
+});
+
+test('POST request should include title and author keys', async () => {
+  const badBlogObject = {
+    url: 'https://test-url.com',
+    likes: 7,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(badBlogObject)
+    .expect(400);
+
+  const checkBlog = await Blog.findOne({
+    url: 'https://test-url.com',
+    likes: 7,
+  });
+
+  expect(checkBlog).toBe(null);
 });
 
 afterAll(() => {
