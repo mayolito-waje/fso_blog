@@ -6,6 +6,7 @@ import blogsRouter from './controllers/blogs.js';
 import * as config from './utils/config.js';
 import * as logger from './utils/logger.js';
 import * as middleware from './utils/middleware.js';
+import loginRouter from './controllers/login.js';
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(morgan((tokens, req, res) => [
   JSON.stringify(req.body),
 ].join(' ')));
 
+app.use('/login', loginRouter);
 app.use('/api/blogs', blogsRouter);
 
 app.use(middleware.resourceNotFound);
