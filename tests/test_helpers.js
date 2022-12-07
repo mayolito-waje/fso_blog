@@ -1,4 +1,5 @@
 import Blog from '../models/blog.js';
+import User from '../models/user.js';
 
 export const blogs = [
   {
@@ -39,10 +40,33 @@ export const blogs = [
   },
 ];
 
+export const users = [
+  {
+    username: 'root',
+    name: 'superuser',
+    password: 'secretPassword#1',
+  },
+  {
+    username: 'user1',
+    name: 'user1',
+    password: 'secretPassword#2',
+  },
+  {
+    username: 'user2',
+    name: 'user2',
+    password: 'secretPassword#3',
+  },
+];
+
 export const blogsInDb = async () => {
   const getBlogs = await Blog.find({});
   return getBlogs.map((blog) => blog.toJSON());
 };
+
+export const usersInDb = async () => {
+  const getUsers = await User.find({});
+  return getUsers.map((user) => user.toJSON());
+}
 
 export const unknownId = async () => {
   const unknownBlog = new Blog({

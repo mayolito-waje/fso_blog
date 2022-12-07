@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import supertest from 'supertest';
 import app from '../app.js';
-import * as helpers from './test_helpers.js';
+import * as helper from './test_helpers.js';
 import Blog from '../models/blog.js';
 
 const api = supertest(app);
@@ -9,7 +9,7 @@ const api = supertest(app);
 beforeEach(async () => {
   await Blog.deleteMany({});
 
-  const blogLists = helpers.blogs
+  const blogLists = helper.blogs
     .map((blog) => new Blog(blog));
   const promises = blogLists.map((blog) => blog.save());
 
@@ -26,7 +26,7 @@ describe('getting all blogs', () => {
 
   test('should return all blogs', async () => {
     const contents = await api.get('/api/blogs');
-    expect(contents.body).toHaveLength(helpers.blogs.length);
+    expect(contents.body).toHaveLength(helper.blogs.length);
   });
 
   test('returned blogs should contain specific blog', async () => {
@@ -46,7 +46,7 @@ describe('getting all blogs', () => {
 
 describe('fetch blog with specific id', () => {
   test('return the blog if id is available', async () => {
-    const blogsAtStart = await helpers.blogsInDb();
+    const blogsAtStart = await helper.blogsInDb();
     const blogToView = blogsAtStart[0];
 
     const resultBlog = await api
@@ -58,7 +58,7 @@ describe('fetch blog with specific id', () => {
   });
 
   test('unavailable id should return 404', async () => {
-    const unknownId = await helpers.unknownId();
+    const unknownId = await helper.unknownId();
 
     await api
       .get(`/api/blogs/${unknownId}`)
@@ -89,8 +89,8 @@ describe('handle POST requests', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
-    const blogsAtEnd = await helpers.blogsInDb();
-    expect(blogsAtEnd).toHaveLength(helpers.blogs.length + 1);
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.blogs.length + 1);
     const titles = blogsAtEnd.map((r) => r.title);
     expect(titles).toContain('Test Blog');
   });
@@ -137,7 +137,7 @@ describe('handle POST requests', () => {
 
 describe('handle DELETE requests', () => {
   test('delete a blog resource with available id', async () => {
-    const blogsAtStart = await helpers.blogsInDb();
+    const blogsAtStart = await helper.blogsInDb();
     const blogToDelete = blogsAtStart[0];
     const idToDelete = blogToDelete.id;
 
@@ -145,8 +145,8 @@ describe('handle DELETE requests', () => {
       .delete(`/api/blogs/${idToDelete}`)
       .expect(204);
 
-    const blogsAtEnd = await helpers.blogsInDb();
-    expect(blogsAtEnd).toHaveLength(helpers.blogs.length - 1);
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.blogs.length - 1);
 
     const titles = blogsAtEnd.map((blog) => blog.title);
     expect(titles).not.toContain(blogToDelete.title);
@@ -155,7 +155,7 @@ describe('handle DELETE requests', () => {
 
 describe('handle blog updates', () => {
   test('update a blog with available id', async () => {
-    const blogsAtStart = await helpers.blogsInDb();
+    const blogsAtStart = await helper.blogsInDb();
     const blogToUpdate = blogsAtStart[0];
     const idToUpdate = blogToUpdate.id;
 
