@@ -1,30 +1,12 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
 import supertest from 'supertest';
 import app from '../app.js';
-import User from '../models/user.js';
 import * as helper from './test_helpers.js';
 
 const api = supertest(app);
 
 beforeEach(async () => {
-  await User.deleteMany({});
-
-  const users = await Promise.all(helper.users.map(async (user) => {
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(user.password, saltRounds);
-
-    const newUser = new User({
-      username: user.username,
-      name: user.name,
-      passwordHash,
-    });
-
-    return newUser;
-  }));
-
-  const promises = users.map((user) => user.save());
-  await Promise.all(promises);
+  await helper.seedUsers();
 }, 100000);
 
 describe('login', () => {

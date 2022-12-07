@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import Blog from '../models/blog.js';
 import User from '../models/user.js';
 
@@ -58,6 +59,26 @@ export const users = [
   },
 ];
 
+export const seedUsers = async () => {
+  await User.deleteMany({});
+
+  const makeUsers = await Promise.all(users.map(async (user) => {
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(user.password, saltRounds);
+
+    const newUser = new User({
+      username: user.username,
+      name: user.name,
+      passwordHash,
+    });
+
+    return newUser;
+  }));
+
+  const promises = makeUsers.map((user) => user.save());
+  await Promise.all(promises);
+};
+
 export const blogsInDb = async () => {
   const getBlogs = await Blog.find({});
   return getBlogs.map((blog) => blog.toJSON());
@@ -66,7 +87,7 @@ export const blogsInDb = async () => {
 export const usersInDb = async () => {
   const getUsers = await User.find({});
   return getUsers.map((user) => user.toJSON());
-}
+};
 
 export const unknownId = async () => {
   const unknownBlog = new Blog({
