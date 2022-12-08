@@ -265,8 +265,35 @@ describe('handle blog updates', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/);
 
-    const updatedBlog = await api.get(`/api/blogs/${idToUpdate}`);
-    expect(updatedBlog.body.likes).toBe(24);
+    const blogsAtEnd = await helper.blogsInDb();
+    const updatedBlog = blogsAtEnd[0];
+    expect(updatedBlog.likes).toBe(24);
+  });
+
+  test('only authorized the blog update to owner', async () => {
+    const differentUser = await api
+      .post('/login')
+      .send({
+        username: 'user1',
+        password: 'secretPassword#2',
+      });
+
+    const { token } = differentUser.body;
+
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToUpdate = blogsAtStart[0];
+    const idToUpdate = blogToUpdate.id;
+
+    await api
+      .put(`/api/blogs/${idToUpdate}`)
+      .send({ likes: 24 })
+      .auth(token, { type: 'bearer' })
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    const updatedBlog = blogsAtEnd[0];
+    expect(updatedBlog.likes).not.toBe(24);
   });
 });
 

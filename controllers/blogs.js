@@ -1,6 +1,7 @@
 import express from 'express';
 import 'express-async-errors';
 import jwt from 'jsonwebtoken';
+import _ from 'lodash';
 import User from '../models/user.js';
 import Blog from '../models/blog.js';
 import * as config from '../utils/config.js';
@@ -18,15 +19,24 @@ blogsRouter.get('/:id', async (req, res, next) => {
 });
 
 blogsRouter.put('/:id', async (req, res, next) => {
-  const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
+  const { user } = req;
+  const tokenId = user.toString();
 
-  if (updatedBlog) {
-    res.json(updatedBlog);
-  } else {
-    next();
+  const blogToUpdate = await Blog.findById(req.params.id);
+  if (_.isNull(blogToUpdate)) {
+    return next();
   }
+
+  const ownerId = blogToUpdate.user.toString();
+
+  if (tokenId !== ownerId) {
+    return res.status(401).json({
+      error: 'you are not authorized to update this blog',
+    });
+  }
+
+  await blogToUpdate.update(req.body);
+  return res.json(blogToUpdate);
 });
 
 blogsRouter.delete('/:id', async (req, res) => {
