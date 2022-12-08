@@ -6,7 +6,21 @@ import Blog from '../models/blog.js';
 
 const api = supertest(app);
 
+const loginAndGetToken = async () => {
+  const user = await api
+    .post('/login')
+    .send({
+      username: 'root',
+      password: 'secretPassword#1',
+    })
+    .expect(200);
+
+  const { token } = user.body;
+  return token;
+};
+
 beforeEach(async () => {
+  await helper.seedUsers();
   await Blog.deleteMany({});
 
   const blogLists = helper.blogs
@@ -83,9 +97,12 @@ describe('handle POST requests', () => {
       likes: 7,
     };
 
+    const token = await loginAndGetToken();
+
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .auth(token, { type: 'bearer' })
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
@@ -93,6 +110,23 @@ describe('handle POST requests', () => {
     expect(blogsAtEnd).toHaveLength(helper.blogs.length + 1);
     const titles = blogsAtEnd.map((r) => r.title);
     expect(titles).toContain('Test Blog');
+  });
+
+  test('should not add a new blog if token is wrong or missing', async () => {
+    const newBlog = {
+      title: 'Test Blog',
+      author: 'Sample Author',
+      url: 'https://test-url.com',
+      likes: 7,
+    };
+
+    await api
+      .post('/login')
+      .send(newBlog)
+      .expect(401);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.blogs.length);
   });
 
   test('If the likes keys is missing, it should default to 0', async () => {
