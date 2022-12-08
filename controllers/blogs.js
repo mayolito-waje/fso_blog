@@ -36,9 +36,6 @@ blogsRouter.delete('/:id', async (req, res) => {
   const blogToDelete = await Blog.findById(req.params.id);
   const ownerId = blogToDelete.user.toString();
 
-  console.log(tokenId);
-  console.log(ownerId);
-
   if (tokenId !== ownerId) {
     return res.status(401).json({
       error: 'you are not authorized to delete this blog',

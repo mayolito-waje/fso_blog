@@ -40,26 +40,39 @@ beforeEach(async () => {
 
 describe('getting all blogs', () => {
   test('should return json', async () => {
-    api
+    const token = await loginRootAndGetToken();
+
+    await api
       .get('/api/blogs')
+      .auth(token, { type: 'bearer' })
       .expect(200)
       .expect('Content-Type', /application\/json/);
   });
 
   test('should return all blogs', async () => {
-    const contents = await api.get('/api/blogs');
+    const token = await loginRootAndGetToken();
+
+    const contents = await api
+      .get('/api/blogs')
+      .auth(token, { type: 'bearer' });
     expect(contents.body).toHaveLength(helper.blogs.length);
   });
 
   test('returned blogs should contain specific blog', async () => {
-    const contents = await api.get('/api/blogs');
+    const token = await loginRootAndGetToken();
+
+    const contents = await api.get('/api/blogs')
+      .auth(token, { type: 'bearer' });
 
     const titles = contents.body.map((r) => r.title);
     expect(titles).toContain('Go To Statement Considered Harmful');
   });
 
   test('unique identifiers should be named \'id\'', async () => {
-    const contents = await api.get('/api/blogs');
+    const token = await loginRootAndGetToken();
+
+    const contents = await api.get('/api/blogs')
+      .auth(token, { type: 'bearer' });
     const blogToCheck = contents.body[0];
 
     expect(blogToCheck.id).toBeDefined();
@@ -68,30 +81,37 @@ describe('getting all blogs', () => {
 
 describe('fetch blog with specific id', () => {
   test('return the blog if id is available', async () => {
-    const blogsAtStart = await helper.blogsInDb();
-    const blogToView = blogsAtStart[0];
+    const token = await loginRootAndGetToken();
+
+    const fetchedBlogs = await helper.blogsInDb();
+    const blogToView = fetchedBlogs[0];
 
     const resultBlog = await api
       .get(`/api/blogs/${blogToView.id}`)
+      .auth(token, { type: 'bearer' })
       .expect(200)
       .expect('Content-Type', /application\/json/);
 
-    expect(resultBlog.body).toEqual(blogToView);
+    expect(resultBlog.body.title).toBe(blogToView.title);
   });
 
   test('unavailable id should return 404', async () => {
+    const token = await loginRootAndGetToken();
     const unknownId = await helper.unknownId();
 
     await api
       .get(`/api/blogs/${unknownId}`)
+      .auth(token, { type: 'bearer' })
       .expect(404);
   });
 
   test('invalid id should return 400', async () => {
     const invalidId = '12kdn359d24as';
+    const token = await loginRootAndGetToken();
 
     await api
       .get(`/api/blogs/${invalidId}`)
+      .auth(token, { type: 'bearer' })
       .expect(400);
   });
 });
@@ -236,9 +256,12 @@ describe('handle blog updates', () => {
     const blogToUpdate = blogsAtStart[0];
     const idToUpdate = blogToUpdate.id;
 
+    const token = await loginRootAndGetToken();
+
     await api
       .put(`/api/blogs/${idToUpdate}`)
       .send({ likes: 24 })
+      .auth(token, { type: 'bearer' })
       .expect(200)
       .expect('Content-Type', /application\/json/);
 
