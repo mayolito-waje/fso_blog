@@ -26,7 +26,11 @@ app.use(middleware.tokenExtractor);
 
 app.use('/login', loginRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/blogs', blogsRouter);
+app.use(
+  '/api/blogs',
+  middleware.userExtractor,
+  blogsRouter,
+);
 
 app.use(middleware.resourceNotFound);
 app.use(middleware.errorHandler);

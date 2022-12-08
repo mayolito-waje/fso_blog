@@ -1,4 +1,6 @@
+import jwt from 'jsonwebtoken';
 import * as logger from './logger.js';
+import * as config from './config.js';
 
 export const tokenExtractor = (req, res, next) => {
   const authorization = req.get('authorization');
@@ -6,6 +8,14 @@ export const tokenExtractor = (req, res, next) => {
     const token = authorization.substring(7);
     req.token = token;
   }
+
+  next();
+};
+
+export const userExtractor = (req, res, next) => {
+  const { token } = req;
+  const decodedToken = jwt.verify(token, config.SECRET_KEY);
+  req.user = decodedToken.id;
 
   next();
 };

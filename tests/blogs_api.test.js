@@ -3,10 +3,11 @@ import supertest from 'supertest';
 import app from '../app.js';
 import * as helper from './test_helpers.js';
 import Blog from '../models/blog.js';
+import User from '../models/user.js';
 
 const api = supertest(app);
 
-const loginAndGetToken = async () => {
+const loginRootAndGetToken = async () => {
   const user = await api
     .post('/login')
     .send({
@@ -23,8 +24,15 @@ beforeEach(async () => {
   await helper.seedUsers();
   await Blog.deleteMany({});
 
+  const rootUser = await User.findOne({ username: 'root' });
+  const id = rootUser._id;
+
   const blogLists = helper.blogs
-    .map((blog) => new Blog(blog));
+    .map((blog) => new Blog({
+      ...blog,
+      user: id,
+    }));
+
   const promises = blogLists.map((blog) => blog.save());
 
   await Promise.all(promises);
@@ -97,7 +105,7 @@ describe('handle POST requests', () => {
       likes: 7,
     };
 
-    const token = await loginAndGetToken();
+    const token = await loginRootAndGetToken();
 
     await api
       .post('/api/blogs')
@@ -136,7 +144,7 @@ describe('handle POST requests', () => {
       url: 'https://test-url.com',
     };
 
-    const token = await loginAndGetToken();
+    const token = await loginRootAndGetToken();
 
     await api
       .post('/api/blogs')
@@ -158,7 +166,7 @@ describe('handle POST requests', () => {
       likes: 7,
     };
 
-    const token = await loginAndGetToken();
+    const token = await loginRootAndGetToken();
 
     await api
       .post('/api/blogs')
@@ -181,8 +189,11 @@ describe('handle DELETE requests', () => {
     const blogToDelete = blogsAtStart[0];
     const idToDelete = blogToDelete.id;
 
+    const token = await loginRootAndGetToken();
+
     await api
       .delete(`/api/blogs/${idToDelete}`)
+      .auth(token, { type: 'bearer' })
       .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
@@ -190,6 +201,32 @@ describe('handle DELETE requests', () => {
 
     const titles = blogsAtEnd.map((blog) => blog.title);
     expect(titles).not.toContain(blogToDelete.title);
+  });
+
+  test('should prohibit deletion if wrong token is sent or blog is not by the current log in user', async () => {
+    const differentUser = await api
+      .post('/login')
+      .send({
+        username: 'user1',
+        password: 'secretPassword#2',
+      });
+
+    const { token } = differentUser.body;
+
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
+    const idToDelete = blogToDelete.id;
+
+    await api
+      .delete(`/api/blogs/${idToDelete}`)
+      .auth(token, { type: 'bearer' })
+      .expect(401);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.blogs.length);
+
+    const titles = blogsAtEnd.map((blog) => blog.title);
+    expect(titles).toContain(blogToDelete.title);
   });
 });
 
