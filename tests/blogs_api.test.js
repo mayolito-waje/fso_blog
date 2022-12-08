@@ -136,9 +136,12 @@ describe('handle POST requests', () => {
       url: 'https://test-url.com',
     };
 
+    const token = await loginAndGetToken();
+
     await api
       .post('/api/blogs')
-      .send(testBlog);
+      .send(testBlog)
+      .auth(token, { type: 'bearer' });
 
     const testBlogAtEnd = await Blog.findOne({
       title: 'Test Blog',
@@ -155,9 +158,12 @@ describe('handle POST requests', () => {
       likes: 7,
     };
 
+    const token = await loginAndGetToken();
+
     await api
       .post('/api/blogs')
       .send(badBlogObject)
+      .auth(token, { type: 'bearer' })
       .expect(400);
 
     const checkBlog = await Blog.findOne({

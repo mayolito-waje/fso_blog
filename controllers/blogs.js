@@ -7,15 +7,6 @@ import * as config from '../utils/config.js';
 
 const blogsRouter = express.Router();
 
-const getTokenFrom = (req) => {
-  const authorization = req.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
-    return authorization.substring(7);
-  }
-
-  return null;
-};
-
 blogsRouter.get('/:id', async (req, res, next) => {
   const fetchedBlog = await Blog.findById(req.params.id).populate('user', { username: 1, name: 1 });
 
@@ -49,8 +40,7 @@ blogsRouter.get('/', async (req, res) => {
 });
 
 blogsRouter.post('/', async (req, res) => {
-  const { body } = req;
-  const token = getTokenFrom(req);
+  const { body, token } = req;
   const decodedToken = jwt.verify(token, config.SECRET_KEY);
 
   if (!decodedToken) {

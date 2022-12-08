@@ -1,5 +1,15 @@
 import * as logger from './logger.js';
 
+export const tokenExtractor = (req, res, next) => {
+  const authorization = req.get('authorization');
+  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+    const token = authorization.substring(7);
+    req.token = token;
+  }
+
+  next();
+};
+
 export const resourceNotFound = (req, res) => res.status(404).json(
   {
     error: 'Resource Not Found',
