@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { isNull } from 'lodash'
 import Blog from './components/Blog'
 import Login from './components/Login'
+import Logout from './components/Logout'
 import ErrorMessage from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -19,12 +20,23 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const userJSON = window.localStorage.getItem('blogAppUser')
+
+    if (userJSON) {
+      const user = JSON.parse(userJSON)
+      setUser(user)
+    }
+  }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
     try {
       const credentials = { username, password }
       const user = await loginService.login(credentials)
+
+      window.localStorage.setItem('blogAppUser', JSON.stringify(user))
       
       setUser(user)
       setUsername('')
@@ -38,9 +50,17 @@ const App = () => {
     }
   }
 
+  const handleLogout = (event) => {
+    event.preventDefault()
+
+    window.localStorage.removeItem('blogAppUser')
+    setUser(null)
+  }
+
   const renderPage = () =>  (
     <div>
       <h2>blogs</h2>
+      <Logout onSubmit={handleLogout} user={user} />
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
