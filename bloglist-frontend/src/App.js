@@ -3,13 +3,14 @@ import { isNull } from 'lodash'
 import Blog from './components/Blog'
 import Login from './components/Login'
 import Logout from './components/Logout'
-import ErrorMessage from './components/Notification'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [error, setError] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [isError, setIsError] = useState(false)
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -43,9 +44,12 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       const message = exception.response.data.error
-      setError(message)
+      setMessage(message)
+      setIsError(true)
+
       setTimeout(() => {
-        setError(null)
+        setMessage(null)
+        setIsError(false)
       }, 5000)
     }
   }
@@ -60,6 +64,7 @@ const App = () => {
   const renderPage = () =>  (
     <div>
       <h2>blogs</h2>
+      <Notification message={message} isError={isError}/>
       <Logout onSubmit={handleLogout} user={user} />
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
@@ -69,16 +74,18 @@ const App = () => {
 
   return (
     <>
-      <ErrorMessage message={error}/>
       {
         isNull(user)
-          ? <Login 
-            onSubmit={handleLogin}
-            username={username}
-            password={password}
-            onChangeUsername={({ target }) => setUsername(target.value)}
-            onChangePassword={({ target }) => setPassword(target.value)}
-          />
+          ? <>
+            <Notification message={message} isError={isError}/>
+            <Login 
+              onSubmit={handleLogin}
+              username={username}
+              password={password}
+              onChangeUsername={({ target }) => setUsername(target.value)}
+              onChangePassword={({ target }) => setPassword(target.value)}
+            />
+          </>
           : renderPage()
       }
     </>

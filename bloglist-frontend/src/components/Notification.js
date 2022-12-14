@@ -1,13 +1,15 @@
 import { isNull } from 'lodash'
 
-const ErrorMessage = ({ message }) => {
+const Notification = ({ message, isError }) => {
   if (isNull(message)) return;
+
+  const color = isError === true ? 'red' : 'green'
 
   const style = {
     fontSize: 25,
-    color: 'red',
+    color,
     borderRadius: 5,
-    border: `solid red 2px`,
+    border: `solid ${color} 2px`,
     textAlign: 'center',
     padding: 10,
     margin: 10,
@@ -20,4 +22,4 @@ const ErrorMessage = ({ message }) => {
   )
 }
 
-export default ErrorMessage
+export default Notification
