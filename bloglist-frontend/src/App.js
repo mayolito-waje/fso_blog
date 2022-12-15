@@ -24,11 +24,10 @@ const App = () => {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    if (isNull(user)) return
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
-  }, [user, newBlog])
+  }, [newBlog])
 
   useEffect(() => {
     const userJSON = window.localStorage.getItem('blogAppUser')

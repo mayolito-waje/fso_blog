@@ -14,10 +14,17 @@ export const tokenExtractor = (req, res, next) => {
 
 export const userExtractor = (req, res, next) => {
   const { token } = req;
+  if (!token) return next();
+
   const decodedToken = jwt.verify(token, config.SECRET_KEY);
+  if (!decodedToken.id) {
+    return res.status(401).json({
+      error: 'token is invalid',
+    });
+  }
   req.user = decodedToken.id;
 
-  next();
+  return next();
 };
 
 export const resourceNotFound = (req, res) => res.status(404).json(
