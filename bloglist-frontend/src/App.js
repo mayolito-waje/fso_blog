@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { isNull } from 'lodash'
 import Blog from './components/Blog'
 import Login from './components/Login'
 import Logout from './components/Logout'
 import AddBlog from './components/AddBlog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -22,6 +23,8 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -84,6 +87,7 @@ const App = () => {
 
   const addBlog = async (event) => {
     event.preventDefault()
+    blogFormRef.current.toggleVisibility()
 
     try {
       const addedBlog = await blogService.create(newBlog)
@@ -102,18 +106,20 @@ const App = () => {
       <Notification message={message} isError={isError}/>
       <Logout onSubmit={handleLogout} user={user} />
 
-      <AddBlog
-        title={newBlog.title}
-        onChangeTitle={({ target }) => setNewBlog({ ...newBlog, title: target.value, })}
+      <Togglable buttonLabel='new blog' ref={blogFormRef}>
+        <AddBlog
+          title={newBlog.title}
+          onChangeTitle={({ target }) => setNewBlog({ ...newBlog, title: target.value, })}
 
-        author={newBlog.author}
-        onChangeAuthor={({ target }) => setNewBlog({ ...newBlog, author: target.value })}
+          author={newBlog.author}
+          onChangeAuthor={({ target }) => setNewBlog({ ...newBlog, author: target.value })}
 
-        url={newBlog.url}
-        onChangeUrl={({ target }) => setNewBlog({ ...newBlog, url: target.value })}
+          url={newBlog.url}
+          onChangeUrl={({ target }) => setNewBlog({ ...newBlog, url: target.value })}
 
-        onSubmit={addBlog}
-      />
+          onSubmit={addBlog}
+        />
+      </Togglable>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
@@ -126,13 +132,15 @@ const App = () => {
         isNull(user)
           ? <>
             <Notification message={message} isError={isError}/>
-            <Login 
-              onSubmit={handleLogin}
-              username={username}
-              password={password}
-              onChangeUsername={({ target }) => setUsername(target.value)}
-              onChangePassword={({ target }) => setPassword(target.value)}
-            />
+            <Togglable buttonLabel='login'>
+              <Login 
+                onSubmit={handleLogin}
+                username={username}
+                password={password}
+                onChangeUsername={({ target }) => setUsername(target.value)}
+                onChangePassword={({ target }) => setPassword(target.value)}
+              />
+            </Togglable>
           </>
           : renderPage()
       }
