@@ -86,13 +86,22 @@ const App = () => {
   }
 
   const handleIncreaseLikes = async (event) => {
-    const { id } = event.target
+    const { id } = event.target.dataset
     const { likes } = event.target.dataset
 
     const update = { likes: Number(likes) + 1 }
     await blogService.update(id, update)
 
     fetchAndSortBlogs()
+  }
+
+  const handleRemoveBlog = async (event) => {
+    const { id, title, author } = event.target.dataset
+
+    if (window.confirm(`Remove blog ${title} by ${author}?`)) {
+      await blogService.removeBLog(id)
+      fetchAndSortBlogs()
+    }
   }
 
   const renderPage = () => (
@@ -108,7 +117,10 @@ const App = () => {
         />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} increaseLikes={handleIncreaseLikes} />
+        <Blog key={blog.id} blog={blog}
+          increaseLikes={handleIncreaseLikes}
+          removeBlog={handleRemoveBlog}
+        />
       )}
     </div>
   )
