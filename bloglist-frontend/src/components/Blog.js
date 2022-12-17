@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({blog, user}) => {
+const Blog = ({blog}) => {
   const [viewFull, setViewFull] = useState(false)
 
   const display = { display: viewFull ? '' : 'none' }
@@ -25,7 +25,7 @@ const Blog = ({blog, user}) => {
       <div style={display}>
         <div>{blog.url}</div>
         <div>likes {blog.likes}<button>like</button></div>
-        <div>{user.name}</div>
+        <div>{blog.user.name}</div>
       </div>
     </div>  
   )
