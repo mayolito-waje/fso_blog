@@ -1,13 +1,11 @@
-import { useState, useRef, forwardRef, useImperativeHandle } from 'react'
+import { useState } from 'react'
 
-const AddBlog = forwardRef(({ createBlog, handleError }, refs) => {
+const AddBlog = ({ createBlog, handleError }) => {
   const emptyBlog = {
     title: '',
     author: '',
     url: '',
   }
-
-  const ref = useRef()
 
   const [newBlog, setNewBlog] = useState(emptyBlog)
 
@@ -22,10 +20,8 @@ const AddBlog = forwardRef(({ createBlog, handleError }, refs) => {
     }
   }
 
-  useImperativeHandle(refs, () => newBlog, [newBlog])
-
   return (
-    <form onSubmit={addNewBlog} ref={ref}>
+    <form onSubmit={addNewBlog}>
       <div>
         title: 
         <input type='text' name='title' value={newBlog.title}
@@ -44,8 +40,6 @@ const AddBlog = forwardRef(({ createBlog, handleError }, refs) => {
       <button type='submit'>create</button>
     </form>
   )
-})
-
-AddBlog.displayName = 'AddBlog'
+}
 
 export default AddBlog

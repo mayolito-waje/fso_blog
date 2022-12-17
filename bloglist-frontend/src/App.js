@@ -15,14 +15,12 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
-  const newBlogRef = useRef()
-  const checkNewBlog = newBlogRef.current
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
-  }, [checkNewBlog])
+  }, [])
 
   useEffect(() => {
     const userJSON = window.localStorage.getItem('blogAppUser')
@@ -65,6 +63,8 @@ const App = () => {
   const handleCreateBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility()
     const addedBlog = await blogService.create(newBlog)
+    setBlogs(blogs.concat(addedBlog))
+
     setMessage(`a new blog ${addedBlog.title} by ${addedBlog.author} added`)
     clearNotification()
   }
@@ -79,7 +79,6 @@ const App = () => {
         <AddBlog
           createBlog={handleCreateBlog}
           handleError={(exception) => handleError(exception)}
-          ref={newBlogRef}
         />
       </Togglable>
       {blogs.map(blog =>
