@@ -7,15 +7,12 @@ import AddBlog from './components/AddBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
-import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
   const [isError, setIsError] = useState(false)
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
 
   const blogFormRef = useRef()
   const newBlogRef = useRef()
@@ -52,25 +49,10 @@ const App = () => {
     clearNotification()
   }
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
-    try {
-      const credentials = { username, password }
-      const user = await loginService.login(credentials)
-
-      window.localStorage.setItem('blogAppUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      
-      setUser(user)
-      setUsername('')
-      setPassword('')
-
-      setMessage(`successfully logged in as ${user.name}`)
-      clearNotification()
-    } catch (exception) {
-      handleError(exception)
-    }
+  const updateUser = (user) => {
+    setUser(user)
+    setMessage(`Logged in as ${user.name}`)
+    clearNotification()
   }
 
   const handleLogout = (event) => {
@@ -114,11 +96,8 @@ const App = () => {
             <Notification message={message} isError={isError}/>
             <Togglable buttonLabel='login'>
               <Login 
-                onSubmit={handleLogin}
-                username={username}
-                password={password}
-                onChangeUsername={({ target }) => setUsername(target.value)}
-                onChangePassword={({ target }) => setPassword(target.value)}
+                updateUser={updateUser}
+                handleError={(exception) => handleError(exception)}
               />
             </Togglable>
           </>
