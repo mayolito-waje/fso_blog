@@ -10,27 +10,22 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
-  const emptyBlog = {
-    title: '',
-    author: '',
-    url: '',
-  }
-
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
   const [isError, setIsError] = useState(false)
-  const [newBlog, setNewBlog] = useState(emptyBlog)
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const blogFormRef = useRef()
+  const newBlogRef = useRef()
+  const checkNewBlog = newBlogRef.current
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
-  }, [newBlog])
+  }, [checkNewBlog])
 
   useEffect(() => {
     const userJSON = window.localStorage.getItem('blogAppUser')
@@ -85,19 +80,11 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = async (event) => {
-    event.preventDefault()
+  const handleCreateBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility()
-
-    try {
-      const addedBlog = await blogService.create(newBlog)
-
-      setNewBlog(emptyBlog)
-      setMessage(`a new blog ${addedBlog.title} by ${addedBlog.author} added`)
-      clearNotification()
-    } catch (exception) {
-      handleError(exception)
-    }
+    const addedBlog = await blogService.create(newBlog)
+    setMessage(`a new blog ${addedBlog.title} by ${addedBlog.author} added`)
+    clearNotification()
   }
 
   const renderPage = () =>  (
@@ -108,16 +95,9 @@ const App = () => {
 
       <Togglable buttonLabel='new blog' ref={blogFormRef}>
         <AddBlog
-          title={newBlog.title}
-          onChangeTitle={({ target }) => setNewBlog({ ...newBlog, title: target.value, })}
-
-          author={newBlog.author}
-          onChangeAuthor={({ target }) => setNewBlog({ ...newBlog, author: target.value })}
-
-          url={newBlog.url}
-          onChangeUrl={({ target }) => setNewBlog({ ...newBlog, url: target.value })}
-
-          onSubmit={addBlog}
+          createBlog={handleCreateBlog}
+          handleError={(exception) => handleError(exception)}
+          ref={newBlogRef}
         />
       </Togglable>
       {blogs.map(blog =>
