@@ -26,10 +26,17 @@ const App = () => {
     }
   }, [])
 
+  const fetchAndSortBlogs = async () => {
+    const blogs = await blogService.getAll()
+    blogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
+    setBlogs(blogs)
+  }
+
   useEffect(() => {
-    blogService.getAll()
-      .then((blogs) => setBlogs(blogs))
-      .catch(() => {
+    (async () => {
+      try {
+        await fetchAndSortBlogs()
+      } catch {
         setUser(null)
         setMessage('Session expired. Please re-login')
         setIsError(true)
@@ -38,7 +45,8 @@ const App = () => {
           setMessage(null)
           setIsError(false)
         }, 5000)
-      })
+      }
+    })()
   }, [user])
 
   const clearNotification = () => 
@@ -84,8 +92,7 @@ const App = () => {
     const update = { likes: Number(likes) + 1 }
     await blogService.update(id, update)
 
-    const updatedBlogs = await blogService.getAll()
-    setBlogs(updatedBlogs)
+    fetchAndSortBlogs()
   }
 
   const renderPage = () => (
