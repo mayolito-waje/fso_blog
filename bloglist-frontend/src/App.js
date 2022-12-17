@@ -17,12 +17,6 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [])
-
-  useEffect(() => {
     const userJSON = window.localStorage.getItem('blogAppUser')
 
     if (userJSON) {
@@ -32,13 +26,27 @@ const App = () => {
     }
   }, [])
 
+  useEffect(() => {
+    blogService.getAll()
+      .then((blogs) => setBlogs(blogs))
+      .catch(() => {
+        setUser(null)
+        setMessage('Session expired. Please re-login')
+        setIsError(true)
+
+        setTimeout(() => {
+          setMessage(null)
+          setIsError(false)
+        }, 5000)
+      })
+  }, [user])
+
   const clearNotification = () => 
     setTimeout(() => {
       setMessage(null)
       setIsError(false)
     }, 5000)
   
-
   const handleError = (exception) => {
     const message = exception.response.data.error
     setMessage(message)
@@ -69,7 +77,7 @@ const App = () => {
     clearNotification()
   }
 
-  const renderPage = () =>  (
+  const renderPage = () => (
     <div>
       <h2>blogs</h2>
       <Notification message={message} isError={isError}/>
