@@ -77,6 +77,17 @@ const App = () => {
     clearNotification()
   }
 
+  const handleIncreaseLikes = async (event) => {
+    const { id } = event.target
+    const { likes } = event.target.dataset
+
+    const update = { likes: Number(likes) + 1 }
+    await blogService.update(id, update)
+
+    const updatedBlogs = await blogService.getAll()
+    setBlogs(updatedBlogs)
+  }
+
   const renderPage = () => (
     <div>
       <h2>blogs</h2>
@@ -90,7 +101,7 @@ const App = () => {
         />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} increaseLikes={handleIncreaseLikes} />
       )}
     </div>
   )

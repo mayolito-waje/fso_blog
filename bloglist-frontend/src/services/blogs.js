@@ -30,4 +30,15 @@ const create = async (blog) => {
   return request.data
 }
 
-export default { getAll, create, setToken }
+const update = async (id, updates) => {
+  const config = {
+    headers: {
+      Authorization: token
+    }
+  }
+
+  const request = await axios.patch(`${baseUrl}/${id}`, updates, config)
+  return request.data
+}
+
+export default { getAll, create, setToken, update }
