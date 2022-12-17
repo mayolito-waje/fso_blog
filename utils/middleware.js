@@ -22,7 +22,7 @@ export const userExtractor = (req, res, next) => {
       error: 'token is invalid',
     });
   }
-  req.user = decodedToken.id;
+  req.user = decodedToken;
 
   return next();
 };
@@ -34,7 +34,6 @@ export const resourceNotFound = (req, res) => res.status(404).json(
   },
 );
 
-// eslint-disable-next-line consistent-return
 export const errorHandler = (err, req, res, next) => {
   logger.error('Error: ', err.message);
 
@@ -51,5 +50,5 @@ export const errorHandler = (err, req, res, next) => {
     return res.status(401).json({ error: 'token expired' });
   }
 
-  next(err);
+  return next(err);
 };
