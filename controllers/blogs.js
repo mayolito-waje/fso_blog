@@ -66,9 +66,7 @@ blogsRouter.delete('/:id', async (req, res) => {
 });
 
 blogsRouter.get('/', async (req, res) => {
-  const { user } = req;
-
-  const blogs = await Blog.find({ user: user.id })
+  const blogs = await Blog.find({})
     .populate('user', { username: 1, name: 1 });
 
   return res.json(blogs);
@@ -89,7 +87,10 @@ blogsRouter.post('/', async (req, res) => {
   });
 
   const savedBlog = await blog.save();
-  return res.status(201).json(savedBlog);
+  const populatedBlog = await Blog.findById(savedBlog.id)
+    .populate('user', { username: 1, name: 1 });
+
+  return res.status(201).json(populatedBlog);
 });
 
 export default blogsRouter;
