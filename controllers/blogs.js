@@ -9,7 +9,7 @@ blogsRouter.get('/:id', async (req, res, next) => {
   const { user } = req;
 
   const fetchedBlog = await Blog.findById(req.params.id)
-    .populate('user', { id: 1, username: 1, name: 1 });
+    .populate('user', { username: 1, name: 1 });
 
   if (fetchedBlog) {
     if (user.id.toString() !== fetchedBlog.user.id.toString()) {
@@ -23,7 +23,7 @@ blogsRouter.get('/:id', async (req, res, next) => {
 });
 
 blogsRouter.patch('/:id', async (req, res, next) => {
-  const { user } = req;
+  const { user, body } = req;
   const tokenId = user.id.toString();
 
   const blogToUpdate = await Blog.findById(req.params.id);
@@ -39,13 +39,11 @@ blogsRouter.patch('/:id', async (req, res, next) => {
     });
   }
 
-  await blogToUpdate.update(req.body, { runValidators: true });
-  return res.json({
-    title: req.body.title || blogToUpdate.title,
-    author: req.body.author || blogToUpdate.author,
-    url: req.body.url || blogToUpdate.url,
-    likes: req.body.likes || blogToUpdate.likes,
-  });
+  const updatedBlog = await Blog
+    .findByIdAndUpdate(req.params.id, body, { new: true, runValidators: true })
+    .populate('user', { username: 1, name: 1 });
+
+  return res.json(updatedBlog);
 });
 
 blogsRouter.delete('/:id', async (req, res) => {
