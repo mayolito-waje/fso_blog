@@ -1,10 +1,14 @@
-const Logout = ({ onSubmit, user }) => (
-  <form onSubmit={onSubmit}>
-    <p>
-      {user.name} is logged in
-      <button type='submit'>logout</button>
-    </p>
-  </form>
-)
+function Logout({ onSubmit, user }) {
+  return (
+    <form onSubmit={onSubmit}>
+      <p>
+        {user.name}
+        {' '}
+        is logged in
+        <button type="submit">logout</button>
+      </p>
+    </form>
+  );
+}
 
-export default Logout
+export default Logout;
