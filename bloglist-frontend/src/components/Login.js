@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import blogService from '../services/blogs';
 import loginService from '../services/login';
 
@@ -49,5 +50,10 @@ function Login({ updateUser, handleError }) {
     </form>
   );
 }
+
+Login.propTypes = {
+  updateUser: PropTypes.func.isRequired,
+  handleError: PropTypes.func.isRequired,
+};
 
 export default Login;

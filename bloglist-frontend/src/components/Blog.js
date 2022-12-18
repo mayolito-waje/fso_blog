@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 function Blog({
   blog, loggedUser, increaseLikes, removeBlog,
@@ -26,13 +27,14 @@ function Blog({
       {blog.title}
       {' '}
       {blog.author}
-      <button onClick={toggleView}>{buttonLabel}</button>
+      <button type="button" onClick={toggleView}>{buttonLabel}</button>
       <div style={display}>
         <div>{blog.url}</div>
         <div>
           likes
           {blog.likes}
           <button
+            type="button"
             data-likes={blog.likes}
             data-id={blog.id}
             onClick={increaseLikes}
@@ -42,6 +44,7 @@ function Blog({
         </div>
         <div>{blog.user.name}</div>
         <button
+          type="button"
           style={removeButtonDisplay}
           data-id={blog.id}
           data-title={blog.title}
@@ -54,5 +57,26 @@ function Blog({
     </div>
   );
 }
+
+Blog.propTypes = {
+  blog: PropTypes.shape({
+    user: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    url: PropTypes.string,
+    likes: PropTypes.number,
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+
+  loggedUser: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+
+  increaseLikes: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+};
 
 export default Blog;

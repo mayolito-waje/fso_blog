@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 function Logout({ onSubmit, user }) {
   return (
     <form onSubmit={onSubmit}>
@@ -10,5 +12,12 @@ function Logout({ onSubmit, user }) {
     </form>
   );
 }
+
+Logout.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default Logout;

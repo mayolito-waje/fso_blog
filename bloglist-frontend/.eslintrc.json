@@ -17,6 +17,8 @@
   },
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "react/jsx-filename-extension": "off"
+    "react/jsx-filename-extension": "off",
+    "consistent-return": "off",
+    "no-alert": "off"
   }
 }

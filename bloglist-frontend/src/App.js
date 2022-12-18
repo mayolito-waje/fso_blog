@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-indent */
 import { useState, useEffect, useRef } from 'react';
 import { isNull } from 'lodash';
 import Blog from './components/Blog';
@@ -20,16 +21,16 @@ function App() {
     const userJSON = window.localStorage.getItem('blogAppUser');
 
     if (userJSON) {
-      const user = JSON.parse(userJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      const loggedUser = JSON.parse(userJSON);
+      setUser(loggedUser);
+      blogService.setToken(loggedUser.token);
     }
   }, []);
 
   const fetchAndSortBlogs = async () => {
-    const blogs = await blogService.getAll();
-    blogs.sort((blog1, blog2) => blog2.likes - blog1.likes);
-    setBlogs(blogs);
+    const fetchedBlogs = await blogService.getAll();
+    fetchedBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes);
+    setBlogs(fetchedBlogs);
   };
 
   useEffect(() => {
@@ -37,6 +38,7 @@ function App() {
       try {
         await fetchAndSortBlogs();
       } catch {
+        window.localStorage.removeItem('blogAppUser');
         setUser(null);
         setMessage('Session expired. Please re-login');
         setIsError(true);
@@ -55,16 +57,16 @@ function App() {
   }, 5000);
 
   const handleError = (exception) => {
-    const message = exception.response.data.error;
-    setMessage(message);
+    const errorMessage = exception.response.data.error;
+    setMessage(errorMessage);
     setIsError(true);
 
     clearNotification();
   };
 
-  const updateUser = (user) => {
-    setUser(user);
-    setMessage(`Logged in as ${user.name}`);
+  const updateUser = (loggedUser) => {
+    setUser(loggedUser);
+    setMessage(`Logged in as ${loggedUser.name}`);
     clearNotification();
   };
 
@@ -128,7 +130,7 @@ function App() {
   );
 
   return (
-    <>
+    <div>
       {
         isNull(user)
           ? (
@@ -144,7 +146,7 @@ function App() {
           )
           : renderPage()
       }
-    </>
+    </div>
   );
 }
 
