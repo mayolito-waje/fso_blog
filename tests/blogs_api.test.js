@@ -259,7 +259,7 @@ describe('handle blog updates', () => {
     const token = await loginRootAndGetToken();
 
     await api
-      .put(`/api/blogs/${idToUpdate}`)
+      .patch(`/api/blogs/${idToUpdate}`)
       .send({ likes: 24 })
       .auth(token, { type: 'bearer' })
       .expect(200)
@@ -285,7 +285,7 @@ describe('handle blog updates', () => {
     const idToUpdate = blogToUpdate.id;
 
     await api
-      .put(`/api/blogs/${idToUpdate}`)
+      .patch(`/api/blogs/${idToUpdate}`)
       .send({ likes: 24 })
       .auth(token, { type: 'bearer' })
       .expect(401)
