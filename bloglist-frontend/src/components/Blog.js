@@ -23,12 +23,12 @@ function Blog({
   };
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       {blog.title}
       {' '}
       {blog.author}
       <button type="button" onClick={toggleView}>{buttonLabel}</button>
-      <div style={display}>
+      <div style={display} className="extraDetails">
         <div>{blog.url}</div>
         <div>
           likes

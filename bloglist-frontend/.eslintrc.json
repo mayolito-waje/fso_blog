@@ -19,6 +19,8 @@
     "react/react-in-jsx-scope": "off",
     "react/jsx-filename-extension": "off",
     "consistent-return": "off",
-    "no-alert": "off"
+    "no-alert": "off",
+    "testing-library/no-container": "off",
+    "testing-library/no-node-access": "off"
   }
 }

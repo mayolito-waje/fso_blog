@@ -29,6 +29,7 @@ function AddBlog({ createBlog, handleError }) {
           type="text"
           name="title"
           value={newBlog.title}
+          data-testid="title-input"
           onChange={({ target }) => setNewBlog({ ...newBlog, title: target.value })}
         />
       </div>
@@ -38,6 +39,7 @@ function AddBlog({ createBlog, handleError }) {
           type="text"
           name="author"
           value={newBlog.author}
+          data-testid="author-input"
           onChange={({ target }) => setNewBlog({ ...newBlog, author: target.value })}
         />
       </div>
@@ -47,6 +49,7 @@ function AddBlog({ createBlog, handleError }) {
           type="text"
           name="url"
           value={newBlog.url}
+          data-testid="url-input"
           onChange={({ target }) => setNewBlog({ ...newBlog, url: target.value })}
         />
       </div>
