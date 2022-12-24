@@ -10,7 +10,8 @@
     "dev": " NODE_ENV=development nodemon index.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --forceExit"
+    "test": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --forceExit",
+    "start:test": "NODE_ENV=test node index.js"
   },
   "devDependencies": {
     "eslint": "^7.32.0 || ^8.2.0",
