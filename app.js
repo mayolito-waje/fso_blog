@@ -9,8 +9,11 @@ import * as logger from './utils/logger.js';
 import * as middleware from './utils/middleware.js';
 import loginRouter from './controllers/login.js';
 import usersRouter from './controllers/users.js';
+import testingRouter from './controllers/testing.js';
 
 const app = express();
+
+mongoose.set('strictQuery', true);
 
 mongoose.connect(config.MONGODB_URI)
   .then(() => {
@@ -32,6 +35,10 @@ app.use(
   middleware.userExtractor,
   blogsRouter,
 );
+
+if (process.env.NODE_ENV === 'test') {
+  app.use('/api/testing', testingRouter);
+}
 
 app.use(middleware.resourceNotFound);
 app.use(middleware.errorHandler);
