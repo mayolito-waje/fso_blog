@@ -1,26 +1,30 @@
 import express from 'express';
-import 'express-async-errors';
-import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 import User from '../models/user.js';
 import Blog from '../models/blog.js';
-import * as config from '../utils/config.js';
 
 const blogsRouter = express.Router();
 
 blogsRouter.get('/:id', async (req, res, next) => {
-  const fetchedBlog = await Blog.findById(req.params.id).populate('user', { username: 1, name: 1 });
+  const { user } = req;
+
+  const fetchedBlog = await Blog.findById(req.params.id)
+    .populate('user', { username: 1, name: 1 });
 
   if (fetchedBlog) {
-    res.json(fetchedBlog);
-  } else {
-    next();
+    if (user.id.toString() !== fetchedBlog.user.id.toString()) {
+      return res.status(401).send({ error: 'You are not allowed to view this blog' });
+    }
+
+    return res.json(fetchedBlog);
   }
+
+  return next();
 });
 
-blogsRouter.put('/:id', async (req, res, next) => {
-  const { user } = req;
-  const tokenId = user.toString();
+blogsRouter.patch('/:id', async (req, res, next) => {
+  const { user, body } = req;
+  const tokenId = user.id.toString();
 
   const blogToUpdate = await Blog.findById(req.params.id);
   if (_.isNull(blogToUpdate)) {
@@ -35,13 +39,16 @@ blogsRouter.put('/:id', async (req, res, next) => {
     });
   }
 
-  await blogToUpdate.update(req.body);
-  return res.json(blogToUpdate);
+  const updatedBlog = await Blog
+    .findByIdAndUpdate(req.params.id, body, { new: true, runValidators: true })
+    .populate('user', { username: 1, name: 1 });
+
+  return res.json(updatedBlog);
 });
 
 blogsRouter.delete('/:id', async (req, res) => {
   const { user } = req;
-  const tokenId = user.toString();
+  const tokenId = user.id.toString();
 
   const blogToDelete = await Blog.findById(req.params.id);
   const ownerId = blogToDelete.user.toString();
@@ -57,21 +64,17 @@ blogsRouter.delete('/:id', async (req, res) => {
 });
 
 blogsRouter.get('/', async (req, res) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
-  res.json(blogs);
+  const blogs = await Blog.find({})
+    .populate('user', { username: 1, name: 1 });
+
+  return res.json(blogs);
 });
 
 blogsRouter.post('/', async (req, res) => {
-  const { body, token } = req;
-  const decodedToken = jwt.verify(token, config.SECRET_KEY);
+  const { body } = req;
 
-  if (!decodedToken) {
-    return res.status(401).json({
-      error: 'invalid token or missing',
-    });
-  }
-
-  const user = await User.findById(decodedToken.id);
+  const userId = req.user.id.toString();
+  const user = await User.findById(userId);
 
   const blog = new Blog({
     title: body.title,
@@ -82,7 +85,10 @@ blogsRouter.post('/', async (req, res) => {
   });
 
   const savedBlog = await blog.save();
-  return res.status(201).json(savedBlog);
+  const populatedBlog = await Blog.findById(savedBlog.id)
+    .populate('user', { username: 1, name: 1 });
+
+  return res.status(201).json(populatedBlog);
 });
 
 export default blogsRouter;

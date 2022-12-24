@@ -1,4 +1,5 @@
 import express from 'express';
+import 'express-async-errors';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
@@ -21,7 +22,6 @@ mongoose.connect(config.MONGODB_URI)
 
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
 app.use(middleware.tokenExtractor);
 

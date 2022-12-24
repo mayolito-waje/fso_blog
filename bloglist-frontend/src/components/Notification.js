@@ -1,9 +1,12 @@
-import { isNull } from 'lodash'
+import { isNull } from 'lodash';
+import PropTypes from 'prop-types';
 
-const Notification = ({ message, isError }) => {
-  if (isNull(message)) return;
+function Notification({ message, isError }) {
+  if (isNull(message)) {
+    return;
+  }
 
-  const color = isError === true ? 'red' : 'green'
+  const color = isError === true ? 'red' : 'green';
 
   const style = {
     fontSize: 25,
@@ -13,13 +16,23 @@ const Notification = ({ message, isError }) => {
     textAlign: 'center',
     padding: 10,
     margin: 10,
-  }
+  };
 
   return (
     <div style={style}>
       {message}
     </div>
-  )
+  );
 }
 
-export default Notification
+Notification.propTypes = {
+  message: PropTypes.string,
+  isError: PropTypes.bool,
+};
+
+Notification.defaultProps = {
+  message: null,
+  isError: false,
+};
+
+export default Notification;

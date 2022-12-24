@@ -1,10 +1,23 @@
-const Logout = ({ onSubmit, user }) => (
-  <form onSubmit={onSubmit}>
-    <p>
-      {user.name} is logged in
-    </p>
-    <button type='submit'>logout</button>
-  </form>
-)
+import PropTypes from 'prop-types';
 
-export default Logout
+function Logout({ onSubmit, user }) {
+  return (
+    <form onSubmit={onSubmit}>
+      <p>
+        {user.name}
+        {' '}
+        is logged in
+        <button type="submit">logout</button>
+      </p>
+    </form>
+  );
+}
+
+Logout.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
+export default Logout;
