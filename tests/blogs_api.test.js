@@ -3,7 +3,6 @@ import supertest from 'supertest';
 import app from '../app.js';
 import * as helper from './test_helpers.js';
 import Blog from '../models/blog.js';
-import User from '../models/user.js';
 
 const api = supertest(app);
 
@@ -22,20 +21,7 @@ const loginRootAndGetToken = async () => {
 
 beforeEach(async () => {
   await helper.seedUsers();
-  await Blog.deleteMany({});
-
-  const rootUser = await User.findOne({ username: 'root' });
-  const id = rootUser._id;
-
-  const blogLists = helper.blogs
-    .map((blog) => new Blog({
-      ...blog,
-      user: id,
-    }));
-
-  const promises = blogLists.map((blog) => blog.save());
-
-  await Promise.all(promises);
+  await helper.seedBlogs();
 }, 100000);
 
 describe('getting all blogs', () => {

@@ -79,6 +79,23 @@ export const seedUsers = async () => {
   await Promise.all(promises);
 };
 
+export const seedBlogs = async () => {
+  // expect to have root user
+  await Blog.deleteMany({});
+
+  const rootUser = await User.findOne({ username: 'root' });
+  const id = rootUser._id;
+
+  const blogLists = blogs
+    .map((blog) => new Blog({
+      ...blog,
+      user: id,
+    }));
+
+  const promises = blogLists.map((blog) => blog.save());
+  await Promise.all(promises);
+};
+
 export const blogsInDb = async () => {
   const getBlogs = await Blog.find({});
   return getBlogs.map((blog) => blog.toJSON());
