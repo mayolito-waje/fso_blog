@@ -61,7 +61,49 @@ describe('Blog app', () => {
     });
 
     describe('when blogs are created', () => {
-      beforeEach(() => {});
+      beforeEach(() => {
+        cy.createBlog({
+          title: 'title 1', author: 'author 1', url: 'url1', likes: 2,
+        });
+        cy.createBlog({
+          title: 'title 2', author: 'author 2', url: 'url2', likes: 3,
+        });
+        cy.createBlog({
+          title: 'title 3', author: 'author 3', url: 'url3', likes: 0,
+        });
+
+        cy.get('.blog .overview').contains('title 2 author 2').parent().as('testBlog');
+      });
+
+      it('can like a blog', () => {
+        cy.get('@testBlog').find('.view-extra').click();
+        cy.get('@testBlog').find('.likes > button').click();
+        cy.get('@testBlog').find('.likes').contains('likes 4');
+      });
+
+      describe('blog deletion', () => {
+        beforeEach(() => {
+          cy.get('@testBlog').find('button.remove-blog').as('removeButton');
+        });
+
+        it('can delete a blog if the logged user is the owner', () => {
+          cy.get('@testBlog').find('.view-extra').click();
+          cy.get('@removeButton').should('be.visible');
+          cy.get('@removeButton').click();
+          cy.get('.blog .overview').contains('title 2 author 2').should('not.exist');
+        });
+
+        it('can\'t delete a blog if the logged user is not the owner', () => {
+          cy.createUser({
+            name: 'another user',
+            username: 'anotheruser',
+            password: 'testUser#001',
+          });
+          cy.login({ username: 'anotheruser', password: 'testUser#001' });
+          cy.get('@testBlog').find('.view-extra').click();
+          cy.get('@removeButton').should('not.be.visible');
+        });
+      });
     });
   });
 });
