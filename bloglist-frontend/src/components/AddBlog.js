@@ -22,7 +22,7 @@ function AddBlog({ createBlog, handleError }) {
   };
 
   return (
-    <form onSubmit={addNewBlog}>
+    <form onSubmit={addNewBlog} id="create-blog">
       <div>
         title:
         <input

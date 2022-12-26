@@ -37,4 +37,31 @@ describe('Blog app', () => {
       cy.isErrorMessage();
     });
   });
+
+  describe('when logged in', () => {
+    beforeEach(() => {
+      cy.login({ username: 'user', password: 'testUser#00' });
+    });
+
+    it('A blog can be created', () => {
+      cy.get('.togglable').contains('new blog').click();
+      cy.get('#create-blog input[name="title"]').type('title');
+      cy.get('#create-blog input[name="author"]').type('author');
+      cy.get('#create-blog input[name="url"]').type('url');
+      cy.get('#create-blog > button[type="submit"]').click();
+
+      cy.contains('a new blog title by author added');
+      cy.isSuccessMessage();
+      cy.get('.blog .overview').contains('title author');
+
+      cy.get('.blog .overview').contains('title author').parent().as('createdBlog');
+      cy.get('@createdBlog').find('.url').should('contain', 'url');
+      cy.get('@createdBlog').find('.likes').should('contain', 'likes 0');
+      cy.get('@createdBlog').find('.user').should('contain', 'test user');
+    });
+
+    describe('when blogs are created', () => {
+      beforeEach(() => {});
+    });
+  });
 });

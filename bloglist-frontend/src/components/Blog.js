@@ -24,14 +24,17 @@ function Blog({
 
   return (
     <div style={blogStyle} className="blog">
-      {blog.title}
-      {' '}
-      {blog.author}
-      <button type="button" onClick={toggleView}>{buttonLabel}</button>
+      <span className="overview">
+        {blog.title}
+        {' '}
+        {blog.author}
+      </span>
+      <button className="view-extra" type="button" onClick={toggleView}>{buttonLabel}</button>
       <div style={display} className="extraDetails">
-        <div>{blog.url}</div>
-        <div>
+        <div className="url">{blog.url}</div>
+        <div className="likes">
           likes
+          {' '}
           {blog.likes}
           <button
             type="button"
@@ -42,8 +45,9 @@ function Blog({
             like
           </button>
         </div>
-        <div>{blog.user.name}</div>
+        <div className="user">{blog.user.name}</div>
         <button
+          className="remove-blog"
           type="button"
           style={removeButtonDisplay}
           data-id={blog.id}
