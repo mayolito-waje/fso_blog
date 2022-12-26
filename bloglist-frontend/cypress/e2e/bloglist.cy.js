@@ -104,6 +104,24 @@ describe('Blog app', () => {
           cy.get('@removeButton').should('not.be.visible');
         });
       });
+
+      it.only('blogs are listed by likes order (highest likes first in the list)', () => {
+        cy.get('.blog').eq(0).find('.overview').should('contain', 'title 2 author 2');
+        cy.get('.blog').eq(1).find('.overview').should('contain', 'title 1 author 1');
+        cy.get('.blog').eq(2).find('.overview').should('contain', 'title 3 author 3');
+
+        cy.get('.blog .overview').contains('title 1 author 1').parent().as('testBlog');
+        cy.get('@testBlog').find('.likes').as('likes');
+        cy.get('@testBlog').find('.likes > button').as('likeButton');
+
+        cy.get('@testBlog').find('button.view-extra').click();
+        cy.get('@likeButton').click();
+        cy.get('@likes').contains('likes 3');
+        cy.get('@likeButton').click();
+        cy.get('@likes').contains('likes 4');
+
+        cy.get('.blog').eq(0).find('.overview').should('contain', 'title 1 author 1');
+      });
     });
   });
 });
