@@ -19,7 +19,7 @@ function Notification({ message, isError }) {
   };
 
   return (
-    <div style={style}>
+    <div id="notification" style={style}>
       {message}
     </div>
   );

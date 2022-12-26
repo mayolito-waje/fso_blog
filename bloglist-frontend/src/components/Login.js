@@ -26,9 +26,9 @@ function Login({ updateUser, handleError }) {
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} id="login-form">
       <h2>log in to application</h2>
-      <div>
+      <div id="username-field">
         username
         <input
           type="text"
@@ -37,7 +37,7 @@ function Login({ updateUser, handleError }) {
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
-      <div>
+      <div id="password-field">
         password
         <input
           type="password"

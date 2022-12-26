@@ -136,7 +136,7 @@ function App() {
           ? (
             <>
               <Notification message={message} isError={isError} />
-              <Togglable buttonLabel="login">
+              <Togglable buttonLabel="login" show>
                 <Login
                   updateUser={updateUser}
                   handleError={(exception) => handleError(exception)}
