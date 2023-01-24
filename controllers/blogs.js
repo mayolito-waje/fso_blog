@@ -8,12 +8,16 @@ const blogsRouter = express.Router();
 blogsRouter.get('/:id', async (req, res, next) => {
   const { user } = req;
 
-  const fetchedBlog = await Blog.findById(req.params.id)
-    .populate('user', { username: 1, name: 1 });
+  const fetchedBlog = await Blog.findById(req.params.id).populate('user', {
+    username: 1,
+    name: 1,
+  });
 
   if (fetchedBlog) {
     if (user.id.toString() !== fetchedBlog.user.id.toString()) {
-      return res.status(401).send({ error: 'You are not allowed to view this blog' });
+      return res
+        .status(401)
+        .send({ error: 'You are not allowed to view this blog' });
     }
 
     return res.json(fetchedBlog);
@@ -39,9 +43,10 @@ blogsRouter.patch('/:id', async (req, res, next) => {
     });
   }
 
-  const updatedBlog = await Blog
-    .findByIdAndUpdate(req.params.id, body, { new: true, runValidators: true })
-    .populate('user', { username: 1, name: 1 });
+  const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, body, {
+    new: true,
+    runValidators: true,
+  }).populate('user', { username: 1, name: 1 });
 
   return res.json(updatedBlog);
 });
@@ -64,8 +69,7 @@ blogsRouter.delete('/:id', async (req, res) => {
 });
 
 blogsRouter.get('/', async (req, res) => {
-  const blogs = await Blog.find({})
-    .populate('user', { username: 1, name: 1 });
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
 
   return res.json(blogs);
 });
@@ -85,8 +89,10 @@ blogsRouter.post('/', async (req, res) => {
   });
 
   const savedBlog = await blog.save();
-  const populatedBlog = await Blog.findById(savedBlog.id)
-    .populate('user', { username: 1, name: 1 });
+  const populatedBlog = await Blog.findById(savedBlog.id).populate('user', {
+    username: 1,
+    name: 1,
+  });
 
   return res.status(201).json(populatedBlog);
 });

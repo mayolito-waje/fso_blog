@@ -62,18 +62,20 @@ export const users = [
 export const seedUsers = async () => {
   await User.deleteMany({});
 
-  const makeUsers = await Promise.all(users.map(async (user) => {
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(user.password, saltRounds);
+  const makeUsers = await Promise.all(
+    users.map(async (user) => {
+      const saltRounds = 10;
+      const passwordHash = await bcrypt.hash(user.password, saltRounds);
 
-    const newUser = new User({
-      username: user.username,
-      name: user.name,
-      passwordHash,
-    });
+      const newUser = new User({
+        username: user.username,
+        name: user.name,
+        passwordHash,
+      });
 
-    return newUser;
-  }));
+      return newUser;
+    }),
+  );
 
   const promises = makeUsers.map((user) => user.save());
   await Promise.all(promises);
@@ -86,11 +88,13 @@ export const seedBlogs = async () => {
   const rootUser = await User.findOne({ username: 'root' });
   const id = rootUser._id;
 
-  const blogLists = blogs
-    .map((blog) => new Blog({
-      ...blog,
-      user: id,
-    }));
+  const blogLists = blogs.map(
+    (blog) =>
+      new Blog({
+        ...blog,
+        user: id,
+      }),
+  );
 
   const promises = blogLists.map((blog) => blog.save());
   await Promise.all(promises);

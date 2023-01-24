@@ -51,10 +51,11 @@ function App() {
     })();
   }, [user]);
 
-  const clearNotification = () => setTimeout(() => {
-    setMessage(null);
-    setIsError(false);
-  }, 5000);
+  const clearNotification = () =>
+    setTimeout(() => {
+      setMessage(null);
+      setIsError(false);
+    }, 5000);
 
   const handleError = (exception) => {
     const errorMessage = exception.response.data.error;
@@ -131,21 +132,19 @@ function App() {
 
   return (
     <div>
-      {
-        isNull(user)
-          ? (
-            <>
-              <Notification message={message} isError={isError} />
-              <Togglable buttonLabel="login" show>
-                <Login
-                  updateUser={updateUser}
-                  handleError={(exception) => handleError(exception)}
-                />
-              </Togglable>
-            </>
-          )
-          : renderPage()
-      }
+      {isNull(user) ? (
+        <>
+          <Notification message={message} isError={isError} />
+          <Togglable buttonLabel="login" show>
+            <Login
+              updateUser={updateUser}
+              handleError={(exception) => handleError(exception)}
+            />
+          </Togglable>
+        </>
+      ) : (
+        renderPage()
+      )}
     </div>
   );
 }

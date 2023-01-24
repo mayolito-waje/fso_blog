@@ -24,12 +24,14 @@ describe('<Blog />', () => {
   const mockRemoveBlog = jest.fn();
 
   test('display title and author only by default', () => {
-    const { container } = render(<Blog
-      blog={blog}
-      loggedUser={loggedUser}
-      increaseLikes={mockIncreaseLikes}
-      removeBlog={mockRemoveBlog}
-    />);
+    const { container } = render(
+      <Blog
+        blog={blog}
+        loggedUser={loggedUser}
+        increaseLikes={mockIncreaseLikes}
+        removeBlog={mockRemoveBlog}
+      />,
+    );
 
     const blogDetails = container.querySelector('.blog');
     const extraDetails = container.querySelector('.extraDetails');
@@ -40,12 +42,14 @@ describe('<Blog />', () => {
   });
 
   test('show the number of likes and url when the view button is clicked and vice versa', async () => {
-    const { container } = render(<Blog
-      blog={blog}
-      loggedUser={loggedUser}
-      increaseLikes={mockIncreaseLikes}
-      removeBlog={mockRemoveBlog}
-    />);
+    const { container } = render(
+      <Blog
+        blog={blog}
+        loggedUser={loggedUser}
+        increaseLikes={mockIncreaseLikes}
+        removeBlog={mockRemoveBlog}
+      />,
+    );
 
     const user = userEvent.setup();
     const viewButton = screen.getByText('view');
@@ -59,12 +63,14 @@ describe('<Blog />', () => {
   });
 
   test('properly received the increase likes event handler as props', async () => {
-    render(<Blog
-      blog={blog}
-      loggedUser={loggedUser}
-      increaseLikes={mockIncreaseLikes}
-      removeBlog={mockRemoveBlog}
-    />);
+    render(
+      <Blog
+        blog={blog}
+        loggedUser={loggedUser}
+        increaseLikes={mockIncreaseLikes}
+        removeBlog={mockRemoveBlog}
+      />,
+    );
 
     const user = userEvent.setup();
 

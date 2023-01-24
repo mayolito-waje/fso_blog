@@ -54,7 +54,10 @@ describe('Blog app', () => {
       cy.isSuccessMessage();
       cy.get('.blog .overview').contains('title author');
 
-      cy.get('.blog .overview').contains('title author').parent().as('createdBlog');
+      cy.get('.blog .overview')
+        .contains('title author')
+        .parent()
+        .as('createdBlog');
       cy.get('@createdBlog').find('.url').should('contain', 'url');
       cy.get('@createdBlog').find('.likes').should('contain', 'likes 0');
       cy.get('@createdBlog').find('.user').should('contain', 'test user');
@@ -63,16 +66,28 @@ describe('Blog app', () => {
     describe('when blogs are created', () => {
       beforeEach(() => {
         cy.createBlog({
-          title: 'title 1', author: 'author 1', url: 'url1', likes: 2,
+          title: 'title 1',
+          author: 'author 1',
+          url: 'url1',
+          likes: 2,
         });
         cy.createBlog({
-          title: 'title 2', author: 'author 2', url: 'url2', likes: 3,
+          title: 'title 2',
+          author: 'author 2',
+          url: 'url2',
+          likes: 3,
         });
         cy.createBlog({
-          title: 'title 3', author: 'author 3', url: 'url3', likes: 0,
+          title: 'title 3',
+          author: 'author 3',
+          url: 'url3',
+          likes: 0,
         });
 
-        cy.get('.blog .overview').contains('title 2 author 2').parent().as('testBlog');
+        cy.get('.blog .overview')
+          .contains('title 2 author 2')
+          .parent()
+          .as('testBlog');
       });
 
       it('can like a blog', () => {
@@ -90,10 +105,12 @@ describe('Blog app', () => {
           cy.get('@testBlog').find('.view-extra').click();
           cy.get('@removeButton').should('be.visible');
           cy.get('@removeButton').click();
-          cy.get('.blog .overview').contains('title 2 author 2').should('not.exist');
+          cy.get('.blog .overview')
+            .contains('title 2 author 2')
+            .should('not.exist');
         });
 
-        it('can\'t delete a blog if the logged user is not the owner', () => {
+        it("can't delete a blog if the logged user is not the owner", () => {
           cy.createUser({
             name: 'another user',
             username: 'anotheruser',
@@ -106,11 +123,23 @@ describe('Blog app', () => {
       });
 
       it.only('blogs are listed by likes order (highest likes first in the list)', () => {
-        cy.get('.blog').eq(0).find('.overview').should('contain', 'title 2 author 2');
-        cy.get('.blog').eq(1).find('.overview').should('contain', 'title 1 author 1');
-        cy.get('.blog').eq(2).find('.overview').should('contain', 'title 3 author 3');
+        cy.get('.blog')
+          .eq(0)
+          .find('.overview')
+          .should('contain', 'title 2 author 2');
+        cy.get('.blog')
+          .eq(1)
+          .find('.overview')
+          .should('contain', 'title 1 author 1');
+        cy.get('.blog')
+          .eq(2)
+          .find('.overview')
+          .should('contain', 'title 3 author 3');
 
-        cy.get('.blog .overview').contains('title 1 author 1').parent().as('testBlog');
+        cy.get('.blog .overview')
+          .contains('title 1 author 1')
+          .parent()
+          .as('testBlog');
         cy.get('@testBlog').find('.likes').as('likes');
         cy.get('@testBlog').find('.likes > button').as('likeButton');
 
@@ -120,7 +149,10 @@ describe('Blog app', () => {
         cy.get('@likeButton').click();
         cy.get('@likes').contains('likes 4');
 
-        cy.get('.blog').eq(0).find('.overview').should('contain', 'title 1 author 1');
+        cy.get('.blog')
+          .eq(0)
+          .find('.overview')
+          .should('contain', 'title 1 author 1');
       });
     });
   });

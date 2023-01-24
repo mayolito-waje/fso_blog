@@ -47,17 +47,19 @@ describe('getting all blogs', () => {
   test('returned blogs should contain specific blog', async () => {
     const token = await loginRootAndGetToken();
 
-    const contents = await api.get('/api/blogs')
+    const contents = await api
+      .get('/api/blogs')
       .auth(token, { type: 'bearer' });
 
     const titles = contents.body.map((r) => r.title);
     expect(titles).toContain('Go To Statement Considered Harmful');
   });
 
-  test('unique identifiers should be named \'id\'', async () => {
+  test("unique identifiers should be named 'id'", async () => {
     const token = await loginRootAndGetToken();
 
-    const contents = await api.get('/api/blogs')
+    const contents = await api
+      .get('/api/blogs')
       .auth(token, { type: 'bearer' });
     const blogToCheck = contents.body[0];
 
@@ -134,10 +136,7 @@ describe('handle POST requests', () => {
       likes: 7,
     };
 
-    await api
-      .post('/login')
-      .send(newBlog)
-      .expect(401);
+    await api.post('/login').send(newBlog).expect(401);
 
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.blogs.length);
@@ -152,10 +151,7 @@ describe('handle POST requests', () => {
 
     const token = await loginRootAndGetToken();
 
-    await api
-      .post('/api/blogs')
-      .send(testBlog)
-      .auth(token, { type: 'bearer' });
+    await api.post('/api/blogs').send(testBlog).auth(token, { type: 'bearer' });
 
     const testBlogAtEnd = await Blog.findOne({
       title: 'Test Blog',
@@ -210,12 +206,10 @@ describe('handle DELETE requests', () => {
   });
 
   test('should prohibit deletion if wrong token is sent or blog is not by the current log in user', async () => {
-    const differentUser = await api
-      .post('/login')
-      .send({
-        username: 'user1',
-        password: 'secretPassword#2',
-      });
+    const differentUser = await api.post('/login').send({
+      username: 'user1',
+      password: 'secretPassword#2',
+    });
 
     const { token } = differentUser.body;
 
@@ -257,12 +251,10 @@ describe('handle blog updates', () => {
   });
 
   test('only authorized the blog update to owner', async () => {
-    const differentUser = await api
-      .post('/login')
-      .send({
-        username: 'user1',
-        password: 'secretPassword#2',
-      });
+    const differentUser = await api.post('/login').send({
+      username: 'user1',
+      password: 'secretPassword#2',
+    });
 
     const { token } = differentUser.body;
 

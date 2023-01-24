@@ -15,7 +15,8 @@ const app = express();
 
 mongoose.set('strictQuery', true);
 
-mongoose.connect(config.MONGODB_URI)
+mongoose
+  .connect(config.MONGODB_URI)
   .then(() => {
     logger.info('Connected to MongoDB');
   })
@@ -30,11 +31,7 @@ app.use(middleware.tokenExtractor);
 
 app.use('/login', loginRouter);
 app.use('/api/users', usersRouter);
-app.use(
-  '/api/blogs',
-  middleware.userExtractor,
-  blogsRouter,
-);
+app.use('/api/blogs', middleware.userExtractor, blogsRouter);
 
 if (process.env.NODE_ENV === 'test') {
   app.use('/api/testing', testingRouter);

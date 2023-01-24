@@ -54,5 +54,9 @@ const removeBLog = async (id) => {
 };
 
 export default {
-  getAll, create, setToken, update, removeBLog,
+  getAll,
+  create,
+  setToken,
+  update,
+  removeBLog,
 };

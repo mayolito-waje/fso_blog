@@ -10,9 +10,7 @@ describe('POST /api/testing/reset', () => {
     await helper.seedUsers();
     await helper.seedBlogs();
 
-    await api
-      .post('/api/testing/reset')
-      .expect(204);
+    await api.post('/api/testing/reset').expect(204);
 
     const usersAtEnd = await helper.usersInDb();
     const blogsAtEnd = await helper.blogsInDb();

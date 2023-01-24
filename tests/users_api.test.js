@@ -54,15 +54,14 @@ describe('creating users', () => {
       },
     ];
 
-    await Promise.all(badRequests.map(async (badRequest) => {
-      await api
-        .post('/api/users')
-        .send(badRequest)
-        .expect(400);
+    await Promise.all(
+      badRequests.map(async (badRequest) => {
+        await api.post('/api/users').send(badRequest).expect(400);
 
-      const usersAtEnd = await helper.usersInDb();
-      expect(usersAtEnd).toHaveLength(helper.users.length);
-    }));
+        const usersAtEnd = await helper.usersInDb();
+        expect(usersAtEnd).toHaveLength(helper.users.length);
+      }),
+    );
   });
 
   test('password should contain at least one small letter, capital letter, number, and special character', async () => {
@@ -78,7 +77,9 @@ describe('creating users', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    expect(result.body.error).toBe('password should contain one: small letter, capital letter, number, and special character');
+    expect(result.body.error).toBe(
+      'password should contain one: small letter, capital letter, number, and special character',
+    );
 
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toHaveLength(helper.users.length);

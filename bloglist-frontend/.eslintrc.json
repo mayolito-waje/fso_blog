@@ -10,7 +10,8 @@
     "react-app/jest",
     "eslint:recommended",
     "plugin:react/recommended",
-    "airbnb"
+    "airbnb",
+    "prettier"
   ],
   "plugins": ["cypress"],
   "parserOptions": {

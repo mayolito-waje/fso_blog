@@ -12,12 +12,14 @@ usersRouter.get('/', async (req, res) => {
 usersRouter.post('/', async (req, res) => {
   const { username, name, password } = req.body;
 
-  const validPasswordRegex = /^(?=.*[A-Z])(?=.*[@$!%*#?&])(?=.*[a-z])(?=.*\d).{8,}$/g;
+  const validPasswordRegex =
+    /^(?=.*[A-Z])(?=.*[@$!%*#?&])(?=.*[a-z])(?=.*\d).{8,}$/g;
   const validPassword = validPasswordRegex.test(password);
 
   if (!validPassword) {
     return res.status(400).json({
-      error: 'password should contain one: small letter, capital letter, number, and special character',
+      error:
+        'password should contain one: small letter, capital letter, number, and special character',
     });
   }
 

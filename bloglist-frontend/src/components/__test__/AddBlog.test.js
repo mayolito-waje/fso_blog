@@ -9,7 +9,9 @@ describe('<AddBlog />', () => {
     const mockCreateBlog = jest.fn();
     const mockHandleError = jest.fn();
 
-    render(<AddBlog createBlog={mockCreateBlog} handleError={mockHandleError} />);
+    render(
+      <AddBlog createBlog={mockCreateBlog} handleError={mockHandleError} />,
+    );
 
     const titleInput = screen.getByTestId('title-input');
     const authorInput = screen.getByTestId('author-input');

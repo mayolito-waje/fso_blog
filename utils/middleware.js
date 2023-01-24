@@ -27,12 +27,11 @@ export const userExtractor = (req, res, next) => {
   return next();
 };
 
-export const resourceNotFound = (req, res) => res.status(404).json(
-  {
+export const resourceNotFound = (req, res) =>
+  res.status(404).json({
     error: 'Resource Not Found',
     status: 404,
-  },
-);
+  });
 
 export const errorHandler = (err, req, res, next) => {
   logger.error('Error: ', err.message);

@@ -30,7 +30,9 @@ function AddBlog({ createBlog, handleError }) {
           name="title"
           value={newBlog.title}
           data-testid="title-input"
-          onChange={({ target }) => setNewBlog({ ...newBlog, title: target.value })}
+          onChange={({ target }) =>
+            setNewBlog({ ...newBlog, title: target.value })
+          }
         />
       </div>
       <div>
@@ -40,7 +42,9 @@ function AddBlog({ createBlog, handleError }) {
           name="author"
           value={newBlog.author}
           data-testid="author-input"
-          onChange={({ target }) => setNewBlog({ ...newBlog, author: target.value })}
+          onChange={({ target }) =>
+            setNewBlog({ ...newBlog, author: target.value })
+          }
         />
       </div>
       <div>
@@ -50,7 +54,9 @@ function AddBlog({ createBlog, handleError }) {
           name="url"
           value={newBlog.url}
           data-testid="url-input"
-          onChange={({ target }) => setNewBlog({ ...newBlog, url: target.value })}
+          onChange={({ target }) =>
+            setNewBlog({ ...newBlog, url: target.value })
+          }
         />
       </div>
       <button type="submit">create</button>

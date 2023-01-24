@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-function Blog({
-  blog, loggedUser, increaseLikes, removeBlog,
-}) {
+function Blog({ blog, loggedUser, increaseLikes, removeBlog }) {
   const [viewFull, setViewFull] = useState(false);
 
   const display = { display: viewFull ? '' : 'none' };
   const buttonLabel = viewFull ? 'hide' : 'view';
-  const removeButtonDisplay = { display: blog.user.id === loggedUser.id ? '' : 'none' };
+  const removeButtonDisplay = {
+    display: blog.user.id === loggedUser.id ? '' : 'none',
+  };
 
   const toggleView = () => {
     setViewFull(!viewFull);
@@ -25,17 +25,15 @@ function Blog({
   return (
     <div style={blogStyle} className="blog">
       <span className="overview">
-        {blog.title}
-        {' '}
-        {blog.author}
+        {blog.title} {blog.author}
       </span>
-      <button className="view-extra" type="button" onClick={toggleView}>{buttonLabel}</button>
+      <button className="view-extra" type="button" onClick={toggleView}>
+        {buttonLabel}
+      </button>
       <div style={display} className="extraDetails">
         <div className="url">{blog.url}</div>
         <div className="likes">
-          likes
-          {' '}
-          {blog.likes}
+          likes {blog.likes}
           <button
             type="button"
             data-likes={blog.likes}
