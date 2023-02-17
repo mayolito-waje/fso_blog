@@ -11,13 +11,15 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --forceExit",
-    "start:test": "NODE_ENV=test node index.js"
+    "start:test": "NODE_ENV=test node index.js",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "eslint": "^7.32.0 || ^8.2.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.2",
     "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.25.2",
+    "husky": "^8.0.3",
     "jest": "^29.3.1",
     "nodemon": "^2.0.20",
     "prettier": "2.8.3",
@@ -37,6 +39,10 @@
   "jest": {
     "testEnvironment": "jest-environment-node",
     "transform": {},
-    "verbose": true
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "__tests__/test_helpers.js",
+      "bloglist-frontend/"
+    ]
   }
 }

@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+pnpm lint
+pnpm test
+cd bloglist-frontend
+CI=true pnpm test *

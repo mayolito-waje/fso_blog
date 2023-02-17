@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-unused-vars */
 const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
