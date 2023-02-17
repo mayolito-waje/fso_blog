@@ -1,6 +1,6 @@
 # Save Blogs
 
-This is a practice app from fullstack open. Save your favorite blogs to Mongo DB.
+A simple project to practice MERN stack and basic CRUD stuffs. Save your favorite blogs to the MongoDB database. It uses React's state management system to handle data and save it to the ui after fetching it from the backend.
 
 ## Testing
 
