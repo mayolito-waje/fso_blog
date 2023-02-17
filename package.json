@@ -13,7 +13,7 @@
     "test": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --forceExit",
     "start:test": "NODE_ENV=test node index.js",
     "prepare": "husky install",
-    "build": "cd bloglist-frontend && pnpm run build && mv build .."
+    "build": "cd bloglist-frontend && pnpm build && mv build .."
   },
   "devDependencies": {
     "eslint": "^7.32.0 || ^8.2.0",
