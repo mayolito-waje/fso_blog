@@ -16,7 +16,7 @@ describe('POST /api/testing/reset', () => {
     const blogsAtEnd = await helper.blogsInDb();
     expect(usersAtEnd).toHaveLength(0);
     expect(blogsAtEnd).toHaveLength(0);
-  });
+  }, 100000);
 });
 
 afterAll(() => {

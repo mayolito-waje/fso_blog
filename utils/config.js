@@ -7,4 +7,4 @@ export const MONGODB_URI =
     ? process.env.MONGODB_TEST_URI
     : process.env.MONGODB_URI;
 
-export const { PORT, SECRET_KEY } = process.env;
+export const { SECRET_KEY } = process.env;
