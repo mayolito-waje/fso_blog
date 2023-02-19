@@ -25,6 +25,11 @@ function Login({ updateUser, handleError }) {
     }
   };
 
+  const setUpGuestAccount = () => {
+    setUsername('guest');
+    setPassword('guestUser#00');
+  };
+
   return (
     <form onSubmit={handleLogin} id="login-form">
       <h2>log in to application</h2>
@@ -47,6 +52,9 @@ function Login({ updateUser, handleError }) {
         />
       </div>
       <button type="submit">login</button>
+      <button type="button" onClick={setUpGuestAccount}>
+        login as guest
+      </button>
     </form>
   );
 }
