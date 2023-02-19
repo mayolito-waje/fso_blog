@@ -2,6 +2,14 @@
 
 A simple project to practice MERN stack and basic CRUD stuffs. Save your favorite blogs to the MongoDB database. It uses React's state management system to handle data and save it to the ui after fetching it from the backend.
 
+## Usage
+<ol>
+  <li>Clone the repo</li>
+  <li>Go to root directory and run <code>pnpm dev</code></li>
+  <li>After the server and mongodb is running, go to http://localhost:3003</li>
+  <li>The app is additionaly hosted at https://fso-blog-list.onrender.com/</li>
+</ol>
+
 ## Testing
 
 Both the frontend and the backend are tested. The backend's API endpoints are tested with integration testing and mock databases to ensure the API endpoints doesn't have errors. The frontend uses component testing to test some crucial components and redux reducers are also tested.
