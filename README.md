@@ -5,6 +5,8 @@ A simple project to practice MERN stack and basic CRUD stuffs. Save your favorit
 ## Usage
 <ol>
   <li>Clone the repo</li>
+  <li>Use <code>pnpm install</code> on both the root directory and client directory to install the required dependencies</li>
+  <li>Use <code>.env.example</code> references to setup environment variables on <code>.env</code> file</li>
   <li>Go to root directory and run <code>pnpm dev</code></li>
   <li>After the server and mongodb is running, go to http://localhost:3003</li>
   <li>The app is additionaly hosted at https://fso-blog-list.onrender.com/</li>
